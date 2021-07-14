@@ -1,0 +1,49 @@
+export const meta = {
+  title: "Zinit 选择性加载",
+  tags: ["Shell", "Zinit", "Blog", "Dude"],
+  date: new Date("2021-01-24"),
+};
+
+最近把老旧的 zplug 换成了 zinit，zsh 启动快了亿点。
+
+Turbo Mode 更是锦上添花，把部分插件推迟到使用时再加载。
+
+## Pipenv
+
+Pipenv 的[自动补全](https://pipenv.pypa.io/en/latest/advanced/#shell-completion)所
+消耗的时间特别长（>1s），并且加载期间内 zsh 无法响应用户操作。
+
+![pipenv loading time](./pipenv.png)
+
+为此，可以把 Pipenv 的加载推迟到使用 Python 时。
+只要写个简单的测试检查即可。
+
+先把 Pipenv 的补全代码提取至单独文件 `.pipenv.zsh`。
+
+```shell
+eval "$(pipenv --completion)"
+```
+
+然后再在 Zinit 代码中懒加载。
+
+```shell
+# pipenv completions (huge)
+zinit ice wait'test -n "$(find . -maxdepth 1 -name "*.py" -print -quit)"' lucid
+zinit snippet ~/.pipenv.zsh
+```
+
+这样子，第一次检测到当前文件夹内有 Python 文件时（`*.py`）才会加载 Pipenv 的补全。
+
+## Git
+
+使用同样的方式可以把 Git 补全推迟到检测出 `./.git`　文件夹为止。
+
+```shell
+# git completions, only when .git present
+zinit wait'[[ -d .git ]]' atload'zicompinit; zicdreplay' lucid blockf for \
+    OMZP::git \
+    OMZP::git-extras \
+    OMZP::tig \
+    OMZP::git-flow-avh \
+    OMZP::git-auto-fetch
+```

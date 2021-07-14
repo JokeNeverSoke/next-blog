@@ -1,0 +1,200 @@
+export const meta = {
+  title: "用 Vercel 和 Hexo 快速搭建静态博客",
+  description: "搭建 Hexo 博客时的常见问题",
+  tags: ["Blogging", "Experience", "Guide", "Tech", "Blog"],
+  date: new Date("2020-06-19"),
+};
+
+import AheiWechat from "./ahei-wechat.png";
+
+## 说在前面
+
+我的博客上线已经有两天了。这两天我和 hexo 死磕了很多东西。
+
+~~甚至写这篇博客的同时还在加 plugins~~[^added-plugins]
+
+鉴于网上搭建静态博客的教程[^tutorials]已经不少，这一篇更多是关于如何避免踩坑。
+
+[^added-plugins]: 编辑时注：在写完开头后我又加了本文使用到的 [hexo-sliding-spoiler](https://github.com/fletchto99/hexo-sliding-spoiler) 和 [hexo-tag-gdemo](https://github.com/heowc/hexo-tag-gdemo/)
+[^tutorials]: [这样的](https://www.bilibili.com/video/BV19t4y1C7rJ)和[这样的](https://www.bilibili.com/video/BV1Bz4y1R7vN)，很多很多
+
+## Vercel 和 git submodule 搭配食用口感极佳（雾
+
+开始搭建的第一个大坑便是 submodule。_前提是你的主目录也是使用 git_
+
+这可能是很多人经历过的一个坑。
+
+鉴于[Ahei](https://ahei.me)已经出现类似情况：
+
+![Ahei Chat History](./ahei-wechat.png)
+
+我决定把这部分放在前面
+
+hexo 大部分的主题都是以 repo 储存的。然而，你只能通过修改这些 repo 主目录的 config.yml 来
+修改这些主题的设置。
+
+这本身并没有什么问题，但是 hexo 要求这些 repo 必须储存在`/themes`文件夹中。
+
+鉴于自定义主题的性质，大部分人都会选择为主题开一个 private repo，而像 vercel 这样的第三方
+则无法直接获取你的 private repo，从而无法获取完整的文件夹，导致 clone 以及后面一系列的操作
+失败。
+
+解决方案也很简单：在 root 的`.gitmodules`里加入验证信息就好了。
+
+### 添加 theme submodule
+
+首先使用`git submodule add`，这里使用`hexo-theme-fluid`举例：
+
+```shell
+cd blog #切换至主目录
+git submodule add https://github.com/fluid-dev/hexo-theme-fluid.git themes/fluid
+Cloning into '/Users/jokeneversoke/Projects/blog/themes/fluid'...
+remote: Enumerating objects: 45, done.
+remote: Counting objects: 100% (45/45), done.
+remote: Compressing objects: 100% (37/37), done.
+remote: Total 4257 (delta 12), reused 24 (delta 8), pack-reused 4212
+Receiving objects: 100% (4257/4257), 7.36 MiB | 46.00 KiB/s, done.
+Resolving deltas: 100% (2606/2606), done.
+```
+
+这个时候的`.gitmodules`文件大致长这个样：
+
+```
+[submodule "themes/fluid"]
+        path = themes/fluid
+        url = https://github.com/fluid-dev/hexo-theme-fluid.git
+```
+
+### 修改 remote
+
+之后建立一个 private 的 Github repo，这里假设名为`my-theme`。
+
+相对应的地址则为`https://github.com/JokeNeverSoke/my-theme.git`。
+
+**注意这里将用户名和地址修改。最好是在 Github 里新建 repo 后复制 https。不要使用 ssh**
+
+然后切换到主题的目录。在这里修改 git 的源。
+
+```bash
+cd themes/fluid #切换至主题目录
+git remote rename origin upstream #修改源
+git remote add origin https://github.com/JokeNeverSoke/my-theme.git #添加GitHub源
+git push -u origin master #上传代码并且修改默认下游
+```
+
+这个时候切换回博客的主目录。因为此时主题的 commit 与原 repo 的 commit 相同，所以这个时候
+使用 Vercel 是完全没有问题的。
+
+~~以上言论尚未核实~~
+
+### 修改 .gitmodules 内的 url 和验证信息
+
+然而，当你修改主题后，你会发现 Vercel 无法运行，报错信息大概长这样：
+
+```
+Command failed with exit code 1: git submodule update --init --recursive --recommend-shallow Submodule 'themes/fluid' (https://github.com/zchengsite/hexo-theme-fluid.git) registered for path 'themes/fluid' Cloning into '/tmp/olWTN6mU8J_MLRZgZ06u/themes/fluid'... fatal: remote error: upload-pack: not our ref 783fc0219829407ec3c2f3367ffe4f4fb64da006 fatal: the remote end hung up unexpectedly Fetched in submodule path 'themes/oranges', but it did not contain 783fc0219829407ec3c2f3367ffe4f4fb64da006. Direct fetching of that commit failed.
+```
+
+由于原 repo 很明显并没有储存我们新建的 commit，所以需要将主目录的`.gitmodules`中
+的 url 修改。
+
+```
+[submodule "themes/fluid"]
+        path = themes/fluid
+        url = https://github.com/JokeNeverSoke/my-theme.git # 注意此处将remote替换掉了
+```
+
+然而，这却不够。光是以上的操作会留下这样的报错：
+
+```
+Command failed with exit code 1: git submodule update --init --recursive --recommend-shallow Submodule 'themes/fluid' (https://github.com/JokeNeverSoke/my-theme.git) registered for path 'themes/fluid' Cloning into '/tmp/j723nRH_eo63mtnhcqJS/themes/fluid'... fatal: could not read Username for 'https://github.com': No such device or address fatal: clone of 'https://github.com/JokeNeverSoke/my-theme.git' into submodule path '/tmp/j723nRH_eo63mtnhcqJS/themes/fluid' failed Failed to clone 'themes/fluid'. Retry scheduled Cloning into '/tmp/j723nRH_eo63mtnhcqJS/themes/fluid'... fatal: could not read Username for 'https://github.com': No such device or address fatal: clone of 'https://github.com/JokeNeverSoke/my-theme.git' into submodule path '/tmp/j723nRH_eo63mtnhcqJS/themes/fluid' failed Failed to clone 'themes/fluid' a second time, aborting
+```
+
+原因则是 Vercel 无法获取你的私人 repo。
+
+~~其实我觉得这挺傻的，我都给 Vercel 我的 Github 账户权限了~~
+
+接下来是关键。在`.submodules`文件中
+使用`https://username:password@github.com/username/repo.git`这样的格式加入你的
+用户名和密码。这里有几点要注意：
+
+1. 如果你的 GitHub 账户启用了 2FA 验证，你则需要去设置中获取专门的密码来替换掉你的默认密码
+2. `username`使用你的 Github 用户名
+3. **千万 千万别把你的这个 repo 公开**，否则可能会导致别人获取到你的密码/秘钥，从而将你的账户暴露
+   在危险中。**如果不小心公开了。请尽快修改密码/删除秘钥！**
+
+```
+[submodule "themes/fluid"]
+        path = themes/fluid
+        url = https://JokeNeverSoke:LKJyv876rvKJHbg@github.com/JokeNeverSoke/my-theme.git
+```
+
+然后~~应该~~就没问题了
+
+## 选择主题 {#pick-theme}
+
+**一定要三思后选择！**
+
+修改 hexo 的主题是一项大工程。
+
+> 读者：你为什么没有把这个放在上一段的前面
+>
+> 答：我觉得那个更重要些
+
+如果要参考大众的意见的话可以参考[这篇](https://en.abnerchou.me/Blog/5c00ca67/)英文博客
+
+大致翻译下来的排名如下：
+
+1. hexo-theme-next
+1. hexo-theme-yilia
+1. hexo-theme-material[^material-fast]
+1. hexo-theme-tranquilpeak
+1. maupassant-hexo
+1. hexo-theme-yelee
+1. hexo-theme-apollo
+1. hexo-theme-icarus
+1. jacman
+1. fexo[^fexo-used]
+
+[^material-fast]: 博客作者提到说 material 这么受欢迎很大的原因是因为它的速度
+[^fexo-used]: 本博客使用的主题
+
+## 小 commit
+
+git 官方给的建议永远都是小 commit。合并也建议用 merge 而不是 squash。这在博客上也至关重要。
+
+假设说你的博客在 git 中，~~（那你最好把第一段读过了）~~
+千万千万不要一个 commit 耗太久。
+**哪怕是写文章也要定期开着 hexo server**
+
+具体要这么做的原因很简单。hexo（对于我来说）非常不稳定。debug 的成本是极大的。
+
+在我写完[上一段](#pick-theme)后，hexo 出了一个 bug[^no-id]。
+
+根据 [markdownguide.org](https://www.markdownguide.org/extended-syntax/#footnotes)
+所给的 markdown 规范，脚注所使用的格式为`[^footnote]`。然而，hexo 官方的 hexo-renderer-marked 并不支持
+脚注。为此，我转向了官方的另一个插件，hexo-renderer-markdown-it。
+
+问题就这么出现了[^git-stashed]。
+或许是因为一口气安装了太多插件导致的，我也不清楚。
+
+总之，_小 commit 能有效的帮你 debug，并且在出现大错误时及时的找回可用的代码版本_
+
+[^no-id]: 出现了没有给标题生成 id（跳转 link 用）的 bug。又耗了一上午。
+[^git-stashed]:
+    要问我怎么解决的？全部 git stash 后重新安装。这个解决方案花了我六个小时才
+    想出来。
+
+## 其他
+
+- 别用 gitalk 和类似的的除非你知道你在干什么，真的很麻烦
+- valine 这段时间不支持电信手机号注册[^valine-reg]
+- 先把配置搞好了再写博客。决定好你要的插件，不要边写边加
+- Vercel 开发真的很方便
+- 我现在用上 [Gatsby](https://gatsbyjs.com/) 了
+
+[^valine-reg]: 编写此文的时间为 2020 年的 6 月 18-20 号
+
+## 结语
+
+哈哈哈，写这段结语时我已经和这个博客磕了三整天了。说真的，认真读一下能避免很多坑。
