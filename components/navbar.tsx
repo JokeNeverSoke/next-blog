@@ -20,7 +20,7 @@ export const Navbar = () => {
       >
         <NavbarItem to="/">Home</NavbarItem>
         <NavbarItem to="/tags">Tags</NavbarItem>
-        <NavbarItem to="/projects">Home</NavbarItem>
+        <NavbarItem to="/projects">Projects</NavbarItem>
         <NavbarItem to="/friends">Friends</NavbarItem>
         <NavbarItem to="/about">About</NavbarItem>
       </UnorderedList>
