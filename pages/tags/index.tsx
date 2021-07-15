@@ -5,6 +5,7 @@ import {
   Heading,
   Box,
   Button,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useRef } from "react";
@@ -17,6 +18,8 @@ const tags = Object.keys(tagCounts);
 const TagListPage = () => {
   // const ref = useRef(null);
   const router = useRouter();
+  const textColor = useColorModeValue("black", "white");
+
   useEffect(() => {
     (async () => {
       console.log(tagCounts);
@@ -29,7 +32,8 @@ const TagListPage = () => {
           )
           .sort((a, b) => b[1] - a[1]),
         fontFamily: "Noto Sans SC, -system-ui, sans-serif",
-        color: "black",
+        color: textColor,
+
         // drawOutOfBound: true,
         rotateRatio: 0.3,
         shape: "diamond",
@@ -39,7 +43,7 @@ const TagListPage = () => {
         },
       });
     })();
-  }, [router]);
+  }, [router, textColor]);
 
   return (
     <BasicLayout title="Tags">
@@ -56,6 +60,9 @@ const TagListPage = () => {
               cursor: "pointer",
               "&:hover": { textDecoration: "underline" },
             },
+          }}
+          _dark={{
+            background: "var(--chakra-gray-800) !important",
           }}
         />
       </Container>

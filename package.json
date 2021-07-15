@@ -52,6 +52,6 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx}": "yarn eslint --fix",
-    "*.{js,css,md,json}": "yarn prettier --write"
+    "*.{js,ts,tsx,css,md,mdx,json}": "yarn prettier --write"
   }
 }
