@@ -11,9 +11,26 @@ const withMDX = require("@next/mdx")({
 const withImages = require("next-images");
 const path = require("path");
 
-module.exports = withMDX(
-  withSentryConfig(
-    {
+if (process.env.NODE_ENV === "development") {
+  module.exports = withMDX({
+    reactStrictMode: true,
+    pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
+    async rewrites() {
+      return [{ source: "/atom.xml", destination: "/api/atom.xml" }];
+    },
+    webpack(config, options) {
+      config.module.rules
+        .find((rule) => String(rule.test) === String(/\.mdx$/))
+        .use.push({ loader: path.resolve(__dirname, "mdxLoader.js") });
+      return config;
+    },
+    experimental: {
+      cpus: 1, // <https://github.com/vercel/next.js/issues/27000#issuecomment-877069389>
+    },
+  });
+} else {
+  module.exports = withSentryConfig(
+    withMDX({
       reactStrictMode: true,
       pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
       async rewrites() {
@@ -28,9 +45,9 @@ module.exports = withMDX(
       experimental: {
         cpus: 1, // <https://github.com/vercel/next.js/issues/27000#issuecomment-877069389>
       },
-    },
+    }),
     {
       silent: true,
     }
-  )
-);
+  );
+}

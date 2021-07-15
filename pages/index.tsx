@@ -57,7 +57,11 @@ const PostList = ({
                   as="div"
                   fontSize="xs"
                   noOfLines={3}
-                  sx={{ "& *": { fontSize: "xs !important" } }}
+                  sx={{
+                    "& *": {
+                      fontSize: "var(--chakra-fontSizes-xs) !important",
+                    },
+                  }}
                 >
                   {post.module.meta.description || (
                     <post.module.default as="div" isPreview />
