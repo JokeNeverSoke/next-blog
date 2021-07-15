@@ -66,7 +66,7 @@ export const components: React.ComponentProps<
       as="pre"
       fontSize="sm"
       fontFamily="mono"
-      background="gray.100"
+      background="gray.600"
       py={2}
       pl={2}
       my={1}
@@ -75,8 +75,11 @@ export const components: React.ComponentProps<
       borderStyle="solid"
       borderWidth={1}
       overflowX="scroll"
+      _dark={{
+        background: "gray.700",
+      }}
     >
-      <Code {...props} />
+      <Code {...props} background="none" color="gray.200" />
     </Box>
   ),
   p: (props) => <Text {...props} my={2} />,
