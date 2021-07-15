@@ -1,0 +1,75 @@
+export const meta = {
+  title: "Adding relative img paths to mdx",
+  date: new Date("2021-07-15"),
+  tags: ["Next.js", "Blogging", "MDX", "React", "Webpack", "Note", "English"],
+};
+
+I was migrating my blog from Gatsby to Nextjs today (which just migrated from Hexo), and I found that I had problems using relative paths for images.
+
+My stack for MDX rendering was `@mdx-js/loader` + `@next/mdx`
+
+My directory structure was as follows:
+
+```
+pages
+├── 404.tsx
+├── _app.tsx
+├── _document.tsx
+├── about.tsx
+├── api
+│   └── atom.xml.tsx
+├── friends.tsx
+├── index.tsx
+├── posts
+│   ├── 2020
+│   │   ├── 06
+│   │   │   ├── build-blog
+│   │   │   │   ├── ahei-wechat.png
+│   │   │   │   └── index.mdx
+│   │   │   └── hello-blogging.mdx
+│   │   └── 07
+│   │       └── new-short-domain.mdx
+│   └── 2021
+│       ├── 01
+│       │   └── zinit-selective-loading
+│       │       ├── index.mdx
+│       │       └── pipenv.png
+│       └── 07
+│           └── mdx-relative-img-import.mdx
+├── projects.tsx
+└── tags
+    ├── [tag].tsx
+    └── index.tsx
+
+11 directories, 17 files
+
+```
+
+I've decided that I would not give up either markdown image syntax nor relative imports in next.js.
+
+So, after a morning of testing, this was what I came up with.
+
+A custom loader to translate markdown syntax:
+
+```js
+const replaceAll = require("string.prototype.replaceall");
+
+module.exports = function (content, map, meta) {
+  return replaceAll(
+    map
+    content,
+    /\!\[(.*)\]\((.+)\)/g,
+    `<NextImage alt="$1" src={require('$2').default} />`
+  );
+};
+```
+
+and a component to render:
+
+```tsx
+const components = {
+  NextImage: (props: any) => {
+    return <Image alt={props.alt || "Image"} {...props} />;
+  },
+};
+```

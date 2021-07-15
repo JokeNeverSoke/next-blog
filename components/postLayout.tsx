@@ -1,4 +1,6 @@
 import { Container, Heading, UnorderedList, ListItem } from "@chakra-ui/react";
+import { Fragment } from "react";
+
 import { BasicLayout, BasicLayoutProps } from "./basicLayout";
 import { SiteLink } from "./siteLink";
 
@@ -22,9 +24,8 @@ export const PostLayout: React.FC<PostLayoutProps> = ({
         <UnorderedList listStyleType="none" m={0}>
           {tags.map((tag, i) => {
             return (
-              <>
+              <Fragment key={tag}>
                 <ListItem
-                  key={tag}
                   display="inline"
                   fontStyle="italic"
                   color="gray.500"
@@ -33,7 +34,7 @@ export const PostLayout: React.FC<PostLayoutProps> = ({
                   <SiteLink to={`/tags/${tag}`.toLowerCase()}>#{tag}</SiteLink>
                 </ListItem>
                 {i < tags.length - 1 && ", "}
-              </>
+              </Fragment>
             );
           })}
         </UnorderedList>

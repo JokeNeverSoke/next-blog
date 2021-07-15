@@ -5,21 +5,25 @@ import {
   ListItem,
   UnorderedList,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+
 import { BasicLayout } from "../../components/basicLayout";
 import { posts } from "../../lib/getAllPosts";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { SiteLink } from "../../components/siteLink";
-import { getAllTags } from "../../lib/getAllTags";
+import { getAllTags, tagCounts } from "../../lib/getAllTags";
 import { tags } from "../../lib/tags";
 
 const TagPage = ({ tag }: { tag: string }) => {
   const { name, description } = tags.find(
     (t) => t.name.toLowerCase() === tag.toLowerCase()
   ) || { name: tag };
-  const relevantPosts = posts.filter((p) =>
-    p.module.meta.tags.map((t: string) => t.toLowerCase()).includes(tag)
-  );
+  const relevantPosts = posts
+    .filter((p) =>
+      p.module.meta.tags.map((t: string) => t.toLowerCase()).includes(tag)
+    )
+    .sort(
+      (a, b) => b.module.meta.date.getTime() - a.module.meta.date.getTime()
+    );
   return (
     <BasicLayout title={`#${tag}`}>
       <Container mt={12}>
@@ -51,7 +55,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: getAllTags().map((t) => ({ params: { tag: t.toLowerCase() } })),
+    paths: Object.keys(getAllTags()).map((t) => ({
+      params: { tag: t.toLowerCase() },
+    })),
     fallback: false,
   };
 };

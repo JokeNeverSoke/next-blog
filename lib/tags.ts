@@ -9,4 +9,8 @@ export const tags = [
     name: "Experience",
     description: "Never go down the same wrong path twice",
   },
+  {
+    name: "Blog",
+    description: "Complete thoughts formed",
+  },
 ];

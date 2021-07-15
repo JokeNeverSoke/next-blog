@@ -1,7 +1,17 @@
 export const meta = {
   title: "用 Vercel 和 Hexo 快速搭建静态博客",
   description: "搭建 Hexo 博客时的常见问题",
-  tags: ["Blogging", "Experience", "Guide", "Tech", "Blog"],
+  tags: [
+    "Blogging",
+    "Experience",
+    "Guide",
+    "Tech",
+    "Blog",
+    "中文",
+    "Vercel",
+    "Hexo",
+    "Git",
+  ],
   date: new Date("2020-06-19"),
 };
 
@@ -45,7 +55,7 @@ hexo 大部分的主题都是以 repo 储存的。然而，你只能通过修改
 
 首先使用`git submodule add`，这里使用`hexo-theme-fluid`举例：
 
-```shell
+```bash
 cd blog #切换至主目录
 git submodule add https://github.com/fluid-dev/hexo-theme-fluid.git themes/fluid
 Cloning into '/Users/jokeneversoke/Projects/blog/themes/fluid'...

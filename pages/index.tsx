@@ -18,12 +18,12 @@ import { Navbar } from "../components/navbar";
 import { SiteLink } from "../components/siteLink";
 import { posts } from "../lib/getAllPosts";
 
-const SpacedTitle: React.FC<{ title: string }> = (props) => {
+const SpacedTitle: React.FC<{ title: string; link: string }> = (props) => {
   const { title, children } = props;
   return (
     <Flex align="baseline" mb={1}>
       <Heading as="h1" fontFamily="Arial, serif">
-        {title}
+        <SiteLink to={props.link}>{title}</SiteLink>
       </Heading>
       <Spacer />
       <Text color="gray.600" fontStyle="italic">
@@ -37,14 +37,18 @@ const PostList = ({
   p,
   title,
   des,
+  link,
 }: {
   p: typeof posts;
   title: string;
   des: string;
+  link: string;
 }) => {
   return (
     <Box p={12}>
-      <SpacedTitle title={title}>{des}</SpacedTitle>
+      <SpacedTitle title={title} link={link}>
+        {des}
+      </SpacedTitle>
       <UnorderedList listStyleType={`"> "`}>
         {p.map((post, i) => {
           return (
@@ -92,8 +96,18 @@ const RecentPosts = () => {
 
   return (
     <SimpleGrid columns={[1, null, 2]} spacing={8} px={12}>
-      <PostList p={blogPosts} title="Posts" des="Longer nonsense" />
-      <PostList p={notePosts} title="Notes" des="Shorter nonsense" />
+      <PostList
+        p={blogPosts}
+        link="/tags/blog"
+        title="Blogs"
+        des="Longer nonsense"
+      />
+      <PostList
+        p={notePosts}
+        link="/tags/note"
+        title="Notes"
+        des="Shorter nonsense"
+      />
     </SimpleGrid>
   );
 };

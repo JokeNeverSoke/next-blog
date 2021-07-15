@@ -63,7 +63,6 @@ export const components: React.ComponentProps<
   a: (props) => <SiteLink {...{ ...props, href: undefined, to: props.href }} />,
   code: (props) => (
     <Box
-      {...props}
       as="pre"
       fontSize="sm"
       fontFamily="mono"
@@ -76,7 +75,9 @@ export const components: React.ComponentProps<
       borderStyle="solid"
       borderWidth={1}
       overflowX="scroll"
-    />
+    >
+      <Code {...props} />
+    </Box>
   ),
   p: (props) => <Text {...props} my={2} />,
   ul: (props) => <UnorderedList pl={2} {...props} />,

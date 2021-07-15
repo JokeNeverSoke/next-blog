@@ -1,11 +1,17 @@
 import { posts } from "./getAllPosts";
 
 export const getAllTags = () => {
-  const tags: string[] = [];
+  const tags: { [tag: string]: number } = {};
   posts.forEach((p) => {
     p.module.meta.tags?.forEach((tag: string) => {
-      if (!tags.includes(tag)) tags.push(tag);
+      if (!(tag in tags)) {
+        tags[tag] = 1;
+      } else {
+        tags[tag]++;
+      }
     });
   });
-  return tags;
+  return { ...tags };
 };
+
+export const tagCounts = getAllTags();
