@@ -95,7 +95,7 @@ const RecentPosts = () => {
     .slice(0, 3);
 
   return (
-    <SimpleGrid columns={[1, null, 2]} spacing={8} px={12}>
+    <SimpleGrid columns={[1, null, 2]} spacing={[4, null, 8]} px={[6, 12]}>
       <PostList
         p={blogPosts}
         link="/tags/blog"

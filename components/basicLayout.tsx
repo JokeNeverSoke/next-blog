@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { Navbar } from "./navbar";
+import Footer from "./footer";
+import { Box } from "@chakra-ui/react";
 
 export interface BasicLayoutProps {
   title?: string;
@@ -25,7 +27,10 @@ export const BasicLayout: React.FC<BasicLayoutProps> = ({
         />
       </Head>
       {!noNav && <Navbar />}
-      {children}
+      <Box as="main" my={8}>
+        {children}
+      </Box>
+      <Footer />
     </>
   );
 };
