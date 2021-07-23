@@ -25,6 +25,12 @@ export const BasicLayout: React.FC<BasicLayoutProps> = ({
           property="og:url"
           content={`https://jokens.me${router.pathname}`}
         />
+        <link
+          rel="alternate"
+          type="application/atom+xml"
+          title="Atom Feed"
+          href="/atom.xml"
+        />
       </Head>
       {!noNav && <Navbar />}
       <Box as="main" my={8}>
