@@ -26,7 +26,7 @@ const SpacedTitle: React.FC<{ title: string; link: string }> = (props) => {
         <SiteLink to={props.link}>{title}</SiteLink>
       </Heading>
       <Spacer minW={6} />
-      <Text color="gray.600" fontStyle="italic">
+      <Text color="gray.600" _dark={{ color: "gray.200" }} fontStyle="italic">
         {children}
       </Text>
     </Flex>
@@ -45,7 +45,7 @@ const PostList = ({
   link: string;
 }) => {
   return (
-    <Box p={12}>
+    <Box p={[8, 12]}>
       <SpacedTitle title={title} link={link}>
         {des}
       </SpacedTitle>
@@ -129,9 +129,9 @@ const Hero = () => {
   const [status, setStatus] = useState<"scrolled" | "initial">("initial");
   useEffect(() => {
     function onScroll() {
-      if (status === "initial" && window.scrollY > 2) {
+      if (status === "initial" && window.scrollY > 5) {
         setStatus("scrolled");
-      } else if (status === "scrolled" && window.scrollY <= 2) {
+      } else if (status === "scrolled" && window.scrollY <= 5) {
         setStatus("initial");
       }
     }
@@ -142,7 +142,7 @@ const Hero = () => {
   }, [status]);
   const variants: Variants = {
     initial: {
-      y: [0, -32],
+      y: [-16, -54],
       opacity: 1,
       transition: {
         y: { repeat: Infinity, repeatType: "mirror" },

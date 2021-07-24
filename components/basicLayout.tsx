@@ -34,7 +34,7 @@ export const BasicLayout: React.FC<BasicLayoutProps> = ({
       </Head>
       <Flex direction="column" minH="100vh">
         {!noNav && <Navbar />}
-        <Box as="main" my={8} flexGrow={1}>
+        <Box as="main" flexGrow={1}>
           {children}
         </Box>
         <Footer />

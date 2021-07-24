@@ -3,7 +3,7 @@ import { SiteLink } from "./siteLink";
 
 const NavbarItem: React.FC<{ to: string }> = ({ children, to }) => {
   return (
-    <SiteLink px={[1, 4]} py={2} to={to} _activeLink={{ fontWeight: "bold" }}>
+    <SiteLink px={[1, 4]} py={4} to={to} _activeLink={{ fontWeight: "bold" }}>
       {children}
     </SiteLink>
   );
