@@ -13,7 +13,7 @@ const Footer = () => {
       />
       <Center p={[4, 8]}>
         <Container maxW="container.lg">
-          <Text fontStyle="italic">
+          <Text fontStyle="italic" textAlign="center">
             Site built on <SiteLink to="https://nextjs.org/">Next.JS</SiteLink>{" "}
             + <SiteLink to="https://chakra-ui.com/">Chakra UI</SiteLink>. Hosted
             on <SiteLink to="https://vercel.com">Vercel</SiteLink>, with code on{" "}
