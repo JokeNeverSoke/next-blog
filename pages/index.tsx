@@ -21,11 +21,11 @@ import { posts } from "../lib/getAllPosts";
 const SpacedTitle: React.FC<{ title: string; link: string }> = (props) => {
   const { title, children } = props;
   return (
-    <Flex align="baseline" mb={1}>
+    <Flex align="baseline" wrap="wrap" mb={1}>
       <Heading as="h1" fontFamily="Arial, serif">
         <SiteLink to={props.link}>{title}</SiteLink>
       </Heading>
-      <Spacer />
+      <Spacer minW={6} />
       <Text color="gray.600" fontStyle="italic">
         {children}
       </Text>

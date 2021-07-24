@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import { Navbar } from "./navbar";
 import Footer from "./footer";
-import { Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 
 export interface BasicLayoutProps {
   title?: string;
@@ -32,11 +32,13 @@ export const BasicLayout: React.FC<BasicLayoutProps> = ({
           href="/atom.xml"
         />
       </Head>
-      {!noNav && <Navbar />}
-      <Box as="main" my={8}>
-        {children}
-      </Box>
-      <Footer />
+      <Flex direction="column" minH="100vh">
+        {!noNav && <Navbar />}
+        <Box as="main" my={8} flexGrow={1}>
+          {children}
+        </Box>
+        <Footer />
+      </Flex>
     </>
   );
 };
