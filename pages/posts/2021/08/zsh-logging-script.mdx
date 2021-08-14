@@ -1,0 +1,22 @@
+export const meta = {
+  title: "Zsh startup logging script",
+  date: new Date("2021-08-14"),
+  tags: ["Shell", "Note", "Zsh"],
+};
+
+```zsh
+llog () {
+	export LLOG_CURRENT=$(($(gdate +%s%N)/1000000))
+	let “diff = $LLOG_CURRENT - $LLOG_PREVIOUS” 2> /dev/null || local diff=0
+	print -P “%F{red}$(gdate +%M:%S.%3N) %f- %F{blue}$*%f  %F{green}[$diff ms]%f”
+	export LLOG_PREVIOUS=$LLOG_CURRENT
+}
+```
+
+How I use it:
+
+```zsh
+llog starting
+llog setting env
+llog starting daemon
+```
