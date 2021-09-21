@@ -1,4 +1,10 @@
-import { ListItem, Box, UnorderedList, Container } from "@chakra-ui/react";
+import {
+  ListItem,
+  Box,
+  UnorderedList,
+  Container,
+  Heading,
+} from "@chakra-ui/react";
 import { BasicLayout } from "../components/basicLayout";
 import { SiteLink } from "../components/siteLink";
 
@@ -25,7 +31,15 @@ const ProjectsPage = () => {
   return (
     <BasicLayout title="Projects">
       <Container>
+        <Heading as="h1" pb={7}>
+          Projects
+        </Heading>
         <UnorderedList>
+          <Project
+            name="电子花园"
+            details="My personal experimental digital garden"
+            link="https://garden.jokens.me"
+          />
           <Project
             name="今天你学习了吗"
             details="Peer Pressure 来源"

@@ -113,18 +113,21 @@ const RecentPosts = () => {
 };
 
 const Hero = () => {
-  const title = useBreakpointValue({
-    base: (
-      <>
-        Joke
-        <br />
-        Never
-        <br />
-        Soke
-      </>
-    ),
-    md: "JokeNeverSoke",
-  });
+  const title = useBreakpointValue(
+    {
+      base: (
+        <>
+          Joke
+          <br />
+          Never
+          <br />
+          Soke
+        </>
+      ),
+      md: "JokeNeverSoke",
+    },
+    "base"
+  );
 
   const [status, setStatus] = useState<"scrolled" | "initial">("initial");
   useEffect(() => {

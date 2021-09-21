@@ -17,7 +17,6 @@
     "@fontsource/fira-code": "^4.5.0",
     "@mdx-js/runtime": "^1.6.22",
     "@sentry/nextjs": "^6.9.0",
-    "@yarnpkg/pnpify": "^3.0.0-rc.10",
     "feed": "^4.2.2",
     "framer-motion": "^4",
     "highlight.js": "^11.1.0",
@@ -53,7 +52,7 @@
     "typescript": "4.3.5"
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": "yarn eslint --fix",
-    "*.{js,ts,tsx,css,md,mdx,json}": "yarn prettier --write"
+    "*.{js,ts,tsx}": "pnpm eslint --fix",
+    "*.{js,ts,tsx,css,md,mdx,json}": "pnpm prettier --write"
   }
 }
