@@ -4,7 +4,7 @@ import { SiteLink } from "./siteLink";
 
 const Footer = () => {
   return (
-    <Box w="full" as="footer">
+    <Box w="full" as="footer" mt={4}>
       <Box
         w={["85%", null, "75%"]}
         mx="auto"
