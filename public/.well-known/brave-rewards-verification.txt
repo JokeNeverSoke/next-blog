@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: jokens.me
+Token: 5abdf5fc3661da0703d41a63183b447926e87b9293932dd9ea2ccbc321f4b1a0
