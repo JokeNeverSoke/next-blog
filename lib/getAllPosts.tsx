@@ -6,7 +6,7 @@ function importAll(r: ReturnType<typeof require.context>) {
   return r
     .keys()
     .map((fileName) => {
-      const module = r(fileName);
+      const _module = r(fileName);
       return {
         link:
           "/posts" +
@@ -14,11 +14,11 @@ function importAll(r: ReturnType<typeof require.context>) {
             .substr(1)
             .replace(/\/index\.mdx$/, "")
             .replace(/\.mdx$/, ""),
-        module,
+        module: _module,
         raw: renderToStaticMarkup(
           // @ts-ignore
           <MDXProvider components={{ NextImage: components.NextImage }}>
-            <module.default />
+            <_module.default />
           </MDXProvider>
         ),
       };
